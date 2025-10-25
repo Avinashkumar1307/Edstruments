@@ -3,7 +3,7 @@ import * as Yup from "yup";
 import { FileText } from "lucide-react";
 
 // Authentication Component
-const LoginPage = ({ onLogin }) => {
+const LoginPage = ({ onLogin }: { onLogin: (username: string) => void }) => {
   const loginSchema = Yup.object().shape({
     username: Yup.string()
       .min(3, "Username must be at least 3 characters")

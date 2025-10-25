@@ -15,7 +15,7 @@ const App = () => {
     }
   }, []);
 
-  const handleLogin = (user) => {
+  const handleLogin = (user: any) => {
     localStorage.setItem("userSession", user);
     setUsername(user);
     setIsAuthenticated(true);
