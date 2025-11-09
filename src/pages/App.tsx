@@ -462,14 +462,14 @@ const Marker = ({ data }) => {
           position={[0.3, 0.3, 0]}
           style={{ pointerEvents: "none" }}
         >
-          <div className="info-card">
+          <div className="w-[90px]">
             <div className="card-image-wrapper">
               <img src={data.image} alt={data.name} className="card-image" />
               <div className="card-overlay"></div>
             </div>
-            <div className="card-content">
-              <h3 className="card-name">{data.name}</h3>
-              <p className="card-details">{data.details}</p>
+            <div className="w-[90px]">
+              <h3 className="text-sm">{data.name}</h3>
+              <p className="text-sm">{data.details}</p>
               <div className="card-location">
                 <span className="location-icon">📍</span>
                 <span>{data.location}</span>
@@ -484,12 +484,26 @@ const Marker = ({ data }) => {
 
 const Rotator = ({ children }) => {
   const ref = useRef();
-  useFrame(() => {
+  useFrame((state) => {
     if (ref.current) {
-      ref.current.rotation.y += 0.002;
+      ref.current.rotation.y += 0.001;
     }
   });
   return <group ref={ref}>{children}</group>;
+};
+
+const CameraRig = () => {
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime() * 0.15;
+    const radius = 8;
+    const height = Math.sin(time * 0.5) * 1.5;
+
+    state.camera.position.x = Math.cos(time) * radius;
+    state.camera.position.z = Math.sin(time) * radius;
+    state.camera.position.y = height;
+    state.camera.lookAt(0, 0, 0);
+  });
+  return null;
 };
 
 function GlobeScene() {
@@ -538,10 +552,10 @@ function App() {
   const globeTransform = Math.min(scrollY * 0.5, 400);
 
   return (
-    <div className="app-container">
+    <div className="app-container overflow-hidden">
       {/* Hero Section with Globe */}
       <div
-        className="hero-section"
+        // className="hero-section"
         style={{ transform: `translateY(-${globeTransform}px)` }}
       >
         {/* <h1 className="header-title">Global Dynamic Assets Tracker</h1>
@@ -549,10 +563,12 @@ function App() {
           Transforming Athletes into Digital Assets
         </p> */}
 
-        <div className="canvas-wrapper pt-20 h-[80vh] overflow-y-hidden">
-          <Canvas camera={{ position: [0, 0, 3.5], fov: 90 }}>
-            <GlobeScene />
-          </Canvas>
+        <div className="w-[100vw] max-h-[100vh] overflow-hidden">
+          <div className="canvas-wrapper pt-10 overflow-y-hidden">
+            <Canvas camera={{ position: [0, 0, 3.5], fov: 90 }}>
+              <GlobeScene />
+            </Canvas>
+          </div>
         </div>
 
         <div className="scroll-indicator">
@@ -1147,19 +1163,19 @@ function App() {
         }
 
         :global(.card-content) {
-          padding: 15px;
+          padding: 10px;
         }
 
         :global(.card-name) {
-          margin: 0 0 8px 0;
-          font-size: 1.1rem;
+          margin: 0 0 2px 0;
+          font-size: 10px;
           font-weight: 600;
           color: #ffffff;
         }
 
         :global(.card-details) {
           margin: 0 0 10px 0;
-          font-size: 0.85rem;
+          font-size: 15px;
           color: #aaaaaa;
           line-height: 1.4;
         }
